@@ -59,6 +59,13 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
   }, [phase])
 
   return (
+    <>
+    <style>{`
+      @media (max-width: 640px) {
+        .preloader-letter { font-size: 38px !important; }
+        .preloader-word { height: 48px !important; }
+      }
+    `}</style>
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9999,
       background: '#020408',
@@ -165,7 +172,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
       </div>
 
       {/* ── ORCHEX letters ── */}
-      <div style={{
+      <div className="preloader-word" style={{
         display: 'flex', gap: 4,
         marginBottom: 18,
         height: 72,
@@ -174,6 +181,7 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
         {WORD.map((char, i) => (
           <span
             key={char + i}
+            className="preloader-letter"
             style={{
               fontFamily: 'var(--font-syne), sans-serif',
               fontSize: 58, fontWeight: 800,
@@ -249,5 +257,6 @@ export default function Preloader({ onComplete }: { onComplete: () => void }) {
       })}
 
     </div>
+    </>
   )
 }

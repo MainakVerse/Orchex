@@ -25,10 +25,11 @@ export default function HeroSection() {
     }))
 
     const resize = () => {
-      W = canvas.width = canvas.offsetWidth
-      H = canvas.height = canvas.offsetHeight
+      W = canvas.width = canvas.offsetWidth || window.innerWidth
+      H = canvas.height = canvas.offsetHeight || window.innerHeight
     }
-    window.addEventListener('resize', resize)
+    const ro = new ResizeObserver(resize)
+    ro.observe(canvas)
     resize()
 
     const onMove = (e: MouseEvent) => {
@@ -100,7 +101,7 @@ export default function HeroSection() {
 
     return () => {
       cancelAnimationFrame(rafId)
-      window.removeEventListener('resize', resize)
+      ro.disconnect()
       document.removeEventListener('mousemove', onMove)
     }
   }, [])
@@ -115,12 +116,19 @@ export default function HeroSection() {
   }
 
   return (
+    <>
+    <style>{`
+      @media (max-width: 640px) {
+        #hero-heading { font-size: 38px !important; }
+        .hero-btn { font-size: 10px !important; padding: 12px 20px !important; }
+      }
+    `}</style>
     <section id="hero" style={{
       position: 'relative', height: '100vh', minHeight: 700,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden',
     }}>
-      <canvas ref={canvasRef} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }} />
+      <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%' }} />
 
       <div style={{
         position: 'relative', zIndex: 10, textAlign: 'center', padding: '0 20px',
@@ -133,7 +141,7 @@ export default function HeroSection() {
           <span style={{ display: 'inline-block', width: 40, height: 1, background: '#00d4ff', opacity: 0.6 }} />
         </div>
 
-        <h1 style={{
+        <h1 id="hero-heading" style={{
           fontFamily: 'var(--font-syne), sans-serif',
           fontSize: 'clamp(72px, 12vw, 160px)',
           fontWeight: 800, letterSpacing: '-0.02em', lineHeight: 0.9,
@@ -161,6 +169,7 @@ export default function HeroSection() {
         }}>
           <a
             href="#cta"
+            className="hero-btn"
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
               fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
@@ -184,6 +193,7 @@ export default function HeroSection() {
           </a>
           <a
             href="#vision"
+            className="hero-btn"
             style={{
               fontFamily: 'var(--font-space-mono), monospace',
               fontSize: 12, letterSpacing: '0.1em', textTransform: 'uppercase',
@@ -227,5 +237,6 @@ export default function HeroSection() {
         <span>Scroll</span>
       </div>
     </section>
+    </>
   )
 }
